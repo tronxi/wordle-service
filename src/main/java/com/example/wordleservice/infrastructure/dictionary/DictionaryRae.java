@@ -20,6 +20,7 @@ public class DictionaryRae implements DictionaryRepository {
             ResponseEntity<String> response = restTemplate.getForEntity(url + wordle.getValue(), String.class);
             if(response.getBody() == null) return Optional.empty();
             if(response.getBody().contains("No se ha encontrado la palabra exacta")) return Optional.empty();
+            if(response.getBody().contains("no se encuentra en este diccionario")) return Optional.empty();
             return Optional.of(new Word(wordle.getValue()));
         } catch (Exception e) {
             return Optional.empty();
