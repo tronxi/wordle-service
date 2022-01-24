@@ -23,4 +23,10 @@ public class Word {
                 .mapToObj(e -> (char)e)
                 .collect(Collectors.toList());
     }
+
+    public Integer numOccurrences(Character letter) {
+        return Math.toIntExact(word.chars()
+                .filter(value -> value == letter)
+                .count());
+    }
 }

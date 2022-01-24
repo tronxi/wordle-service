@@ -5,10 +5,7 @@ import com.example.wordleservice.domain.repositories.DictionaryRepository;
 import com.example.wordleservice.domain.services.TodayWordRetriever;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class WordleUseCase {
@@ -35,13 +32,17 @@ public class WordleUseCase {
             Character letter = wordleLetters.get(i);
             if(word.containLetterInPosition(letter, i)) {
                 letterStatusList.add(LetterStatus.Ordered);
-            } else if(word.contain(letter)) {
+            } else if(word.contain(letter) && sameOccurrencesFromLetter(wordle, word, letter)) {
                 letterStatusList.add(LetterStatus.Unordered);
             } else {
                 letterStatusList.add(LetterStatus.Fail);
             }
         }
         return new WordleResult(letterStatusList, generateStatus(letterStatusList));
+    }
+
+    private Boolean sameOccurrencesFromLetter(Wordle wordle, Word word, Character letter) {
+        return Objects.equals(wordle.numOccurrences(letter), word.numOccurrences(letter));
     }
 
     private WordleStatus generateStatus(List<LetterStatus> letterStatusList) {

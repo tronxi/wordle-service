@@ -26,4 +26,10 @@ public class Wordle {
     public List<Character> getLetters() {
         return letters;
     }
+
+    public Integer numOccurrences(Character letter) {
+        return Math.toIntExact(letters.stream()
+                .filter(character -> character.equals(letter))
+                .count());
+    }
 }
