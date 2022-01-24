@@ -3,6 +3,7 @@ package com.example.wordleservice.domain.model;
 import com.example.wordleservice.domain.exception.InvalidFormatException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Wordle {
     private final int WORDLE_SIZE = 5;
@@ -10,7 +11,11 @@ public class Wordle {
 
     public Wordle(List<Character> letters) {
         if(letters.size() != WORDLE_SIZE) throw new InvalidFormatException();
-        this.letters = letters;
+
+        this.letters = letters
+                .stream()
+                .map(Character::toLowerCase)
+                .collect(Collectors.toList());
     }
 
     public List<Character> getLetters() {

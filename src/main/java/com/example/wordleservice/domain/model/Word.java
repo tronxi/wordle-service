@@ -7,7 +7,7 @@ public class Word {
     private final String word;
 
     public Word(String word) {
-        this.word = word;
+        this.word = word.toLowerCase();
     }
 
     public Boolean containLetterInPosition(Character letter, int position) {
