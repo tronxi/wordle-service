@@ -17,7 +17,12 @@ public class Wordle {
                 .map(Character::toLowerCase)
                 .collect(Collectors.toList());
     }
-
+    public String getValue() {
+        return letters.stream()
+                .map(Object::toString)
+                .reduce(String::concat)
+                .orElse("");
+    }
     public List<Character> getLetters() {
         return letters;
     }

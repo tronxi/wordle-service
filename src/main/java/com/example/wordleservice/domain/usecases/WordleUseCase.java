@@ -1,21 +1,28 @@
 package com.example.wordleservice.domain.usecases;
 
 import com.example.wordleservice.domain.model.*;
+import com.example.wordleservice.domain.repositories.DictionaryRepository;
 import com.example.wordleservice.domain.services.TodayWordRetriever;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WordleUseCase {
     private final TodayWordRetriever todayWordRetriever;
+    private final DictionaryRepository dictionaryRepository;
 
-    public WordleUseCase(TodayWordRetriever todayWordRetriever) {
+    public WordleUseCase(TodayWordRetriever todayWordRetriever, DictionaryRepository dictionaryRepository) {
         this.todayWordRetriever = todayWordRetriever;
+        this.dictionaryRepository = dictionaryRepository;
     }
 
     public WordleResult perform(Wordle wordle) {
+        Optional<Word> maybeWord = dictionaryRepository.findWord(wordle);
+        if(maybeWord.isEmpty()) return new WordleResult(Collections.emptyList(), WordleStatus.Invalid);
         Word word = todayWordRetriever.retrieve();
         return compare(wordle, word);
     }
