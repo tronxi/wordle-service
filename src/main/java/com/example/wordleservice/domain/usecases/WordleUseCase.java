@@ -27,18 +27,36 @@ public class WordleUseCase {
     private WordleResult compare(Wordle wordle, Word word) {
         List<Character> wordleLetters = wordle.getLetters();
         List<LetterStatus> letterStatusList = new ArrayList<>();
-
+        Map<Character, Integer> numMarked = new HashMap<>();
         for (int i = 0; i < wordleLetters.size(); i++) {
             Character letter = wordleLetters.get(i);
             if(word.containLetterInPosition(letter, i)) {
                 letterStatusList.add(LetterStatus.Ordered);
+                numMarked.put(letter, numMarked.getOrDefault(letter, 0) + 1 );
             } else if(word.contain(letter) && sameOccurrencesFromLetter(wordle, word, letter)) {
+                numMarked.put(letter, numMarked.getOrDefault(letter, 0) + 1 );
+                letterStatusList.add(LetterStatus.Unordered);
+            } else if(word.contain(letter)
+                    && numMarked.getOrDefault(letter, 0) < word.numOccurrences(letter)
+                    && !containLetterWithOrden(wordle, word, letter)) {
+                numMarked.put(letter, numMarked.getOrDefault(letter, 0) + 1 );
                 letterStatusList.add(LetterStatus.Unordered);
             } else {
                 letterStatusList.add(LetterStatus.Fail);
             }
         }
         return new WordleResult(letterStatusList, generateStatus(letterStatusList));
+    }
+
+    private boolean containLetterWithOrden(Wordle wordle, Word word, Character letter) {
+        List<Character> wordleLetters = wordle.getLetters();
+        for (int i = 0; i < wordleLetters.size(); i++) {
+            Character actualLetter = wordleLetters.get(i);
+            if(letter.equals(actualLetter) && word.containLetterInPosition(actualLetter, i)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private Boolean sameOccurrencesFromLetter(Wordle wordle, Word word, Character letter) {
